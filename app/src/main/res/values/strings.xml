@@ -1,3 +1,5 @@
 <resources>
-    <string name="app_name">My Application</string>
+    <string name="app_name">Youngman Tracker </string>
+    <string name="Young_title">Youngman</string>
+    <string name="login">Login</string>
 </resources>

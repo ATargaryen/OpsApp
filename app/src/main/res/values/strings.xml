@@ -2,4 +2,6 @@
     <string name="app_name">Youngman Tracker </string>
     <string name="Young_title">Youngman</string>
     <string name="login">Login</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
 </resources>

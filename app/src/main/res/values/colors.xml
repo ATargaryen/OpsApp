@@ -11,8 +11,19 @@
     <!-- Youngman Colors. -->
     <color name="Young_Black">#101212</color>
     <color name="Young_Black2">#262726</color>
-    <color name="Young_Grey">#c9cfce</color>
+    <color name="Young_Grey">#7b7f81</color>
+    <color name="Young_Grey2">#949b9d</color>
+    <color name="Young_Grey3">#c9cfce</color>
+    <color name="Young_Grey4">#f1f1ee</color>
+
     <color name="Young_Yellow">#ffe411</color>
+    <color name="Young_Yellow2">#ffe977</color>
+    <color name="Young_Yellow3">#ffe977</color>
+    <color name="Young_green">#07b152</color>
+    <color name="Young_green2">#6cc071</color>
+    <color name="Young_Blue">#1c68a6</color>
+    <color name="Young_Blue2">#5387be</color>
+
 
 
 </resources>

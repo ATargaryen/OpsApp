@@ -7,6 +7,13 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.android.material.tabs.TabItem;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -23,6 +30,10 @@ public class Dispatch_fragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    ListView listView;
+    TextView textView;
+    String[] listItem;
 
     public Dispatch_fragment() {
         // Required empty public constructor
@@ -53,12 +64,37 @@ public class Dispatch_fragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
+
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_dispatch, container, false);
+        View view =   inflater.inflate(R.layout.fragment_dispatch, container, false);
+
+        // intialize the var
+        listView=(ListView) view.findViewById(R.id.listView);
+        textView=(TextView) view.findViewById(R.id.tesstview);
+        listItem = getResources().getStringArray(R.array.Company);
+
+        // set adapter : which is used to set data to UI
+        final ArrayAdapter<String> adapter = new ArrayAdapter<String>(view.getContext(), R.layout.listlayout, R.id.tesstview, listItem);
+        listView.setAdapter(adapter);
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                // TODO Auto-generated method stub
+                String value=adapter.getItem(position);
+                System.out.println("amanponia"+value);
+
+            }
+        });
+
+
+        return view ;
     }
 }

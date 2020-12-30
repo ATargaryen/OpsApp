@@ -5,12 +5,18 @@
     android:layout_height="match_parent"
     tools:context=".Dispatch_fragment">
 
-    <!-- TODO: Update blank fragment layout -->
+    <!-- TODO: Update blank fragment layout
     <TextView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:text="@string/Dispatch"
         android:gravity="center"
-        />
+        /> -->
+
+    <ListView
+        android:id="@+id/listView"
+        android:layout_width="match_parent"
+        android:layout_height="fill_parent"  >
+    </ListView>
 
 </FrameLayout>

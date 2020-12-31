@@ -43,9 +43,10 @@ public class Challanstatus extends AppCompatActivity {
             Bundle extras = data.getExtras();
             imageBitmap = (Bitmap) extras.get("data"); // get image bitmap data
 
-            Intent in1 = new Intent(this, Previewscreen.class);
-            in1.putExtra("image",imageBitmap); // send to another activity
-            startActivity(in1);
+            Intent intent = new Intent(this, Previewscreen.class);
+            intent.putExtra("image",imageBitmap); // send to another activity
+            intent.putExtra("data", 1);
+            startActivity(intent);
 
         }
 

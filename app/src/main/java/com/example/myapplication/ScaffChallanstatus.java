@@ -1,16 +1,25 @@
 package com.example.myapplication;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -19,14 +28,21 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
+import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Locale;
+import com.example.myapplication.Geolocation;
 
 public class ScaffChallanstatus extends AppCompatActivity {
 
 
     FusedLocationProviderClient fusedLocationProviderClient;  // used in getting Location
+    private static final int FILE_SELECT_CODE = 0;  // used in selecting file
+    static final int REQUEST_IMAGE_CAPTURE = 1;   // used in capture image
+
+    AlertDialog.Builder builder;  // used to show location to user
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +50,8 @@ public class ScaffChallanstatus extends AppCompatActivity {
         setContentView(R.layout.activity_scaffolder_challanstatus);
 
         fusedLocationProviderClient    = LocationServices.getFusedLocationProviderClient(this); // intialize
+        builder = new AlertDialog.Builder(this);
+
 
     }
 
@@ -74,7 +92,8 @@ public class ScaffChallanstatus extends AppCompatActivity {
                     Geocoder geocoder = new Geocoder(ScaffChallanstatus.this, Locale.getDefault());
                     List<Address> addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
 
-                    System.out.println("Aman Your Location at " + addresses.get(0).getAddressLine(0));
+                   // System.out.println("Aman Your Location at " + addresses.get(0).getAddressLine(0));
+                    alert(addresses.get(0).getAddressLine(0));  // Show  data to user
 
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -92,4 +111,79 @@ public class ScaffChallanstatus extends AppCompatActivity {
         });
     }
 
+    public void alert(String string){
+        //Setting message manually and performing action on button click
+        builder.setMessage(string)
+                .setCancelable(false)
+                .setPositiveButton("OKAY", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        Intent intent = new Intent(ScaffChallanstatus.this, Dashboard.class);
+                        startActivity(intent);
+                        Toast.makeText(getApplicationContext(),"BACK", Toast.LENGTH_SHORT).show();
+                    }
+                });
+        //Creating dialog box
+        AlertDialog alert = builder.create();
+        //Setting the title manually
+        alert.setTitle("YOUR LOCATION");
+        alert.show();
+    }
+
+    public void selectfile(View view) {
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.setType("*/*");
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+
+        try {
+            startActivityForResult(
+                    Intent.createChooser(intent, "Select a File to Upload"),
+                    FILE_SELECT_CODE);
+        } catch (android.content.ActivityNotFoundException ex) {
+            // Potentially direct the user to the Market with a Dialog
+            Toast.makeText(this, "Please install a File Manager.",
+                    Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void OpenCamera(View view) {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        try {
+            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);  // start the camera activity
+        } catch (ActivityNotFoundException e) {
+            // display error state to the user
+        }
+    }
+
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case FILE_SELECT_CODE:
+                if (resultCode == RESULT_OK) {
+                    // Get the Uri of the selected file
+                    Uri uri = data.getData();
+
+                    /* Passing ImageURI to the Second Activity */
+                    Intent intent = new Intent(this, Previewscreen.class);
+                    intent.setData(uri);
+                    intent.putExtra("data", 2);
+                    startActivity(intent);
+                }
+                break;
+            case REQUEST_IMAGE_CAPTURE:
+                if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+
+                    Bundle extras = data.getExtras();
+                Bitmap    imageBitmap = (Bitmap) extras.get("data"); // get image bitmap data
+
+                    Intent intent = new Intent(this, Previewscreen.class);
+                    intent.putExtra("image",imageBitmap); // send to another activity
+                    intent.putExtra("data", 1);
+                    startActivity(intent);
+
+                }
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
 }

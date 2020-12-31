@@ -99,7 +99,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="80dp"
-                android:text="verify" />
+                android:text="verify"
+                android:onClick="selectfile"/>
         </TableRow>
 
         <TableRow android:paddingTop="50dp">
@@ -109,7 +110,7 @@
                 android:layout_height="wrap_content"
                 android:layout_column="1"
                 android:text="Material Installed"
-                android:onClick="selectfile"/>
+                />
 
             <Button
                 android:layout_width="wrap_content"

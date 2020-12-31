@@ -15,7 +15,7 @@
         app:layout_constraintHorizontal_bias="0.493"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/younglogo" />
+         android:src="@drawable/younglogo" />
 
     <TextView
         android:id="@+id/textView"
@@ -75,5 +75,5 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView"
-        tools:srcCompat="@drawable/youngman" />
+        android:src="@drawable/youngman" />
 </androidx.constraintlayout.widget.ConstraintLayout>

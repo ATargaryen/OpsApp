@@ -87,7 +87,7 @@ public class Pickup_fragment extends Fragment {
         //        System.out.println("amanponia"+value);
 
                 // go to challan activity
-                Intent intent = new Intent(getActivity(), Challanstatus.class);
+                Intent intent = new Intent(getActivity(), ScaffChallanstatus.class);
                 startActivity(intent);
 
             }

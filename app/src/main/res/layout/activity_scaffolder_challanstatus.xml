@@ -4,8 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Challanstatus">
-
+    tools:context=".ScaffChallanstatus">
 
 
     <LinearLayout
@@ -76,14 +75,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_column="1"
-                android:text="Allocation of Material" />
+                android:text="Vehicle Reached Site" />
 
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="80dp"
                 android:text="Verify"
-                android:onClick="OpenCamera"
+                android:onClick="Verify_geolocation"
 
                 />
         </TableRow>
@@ -94,7 +93,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_column="1"
-                android:text="Physical Verification" />
+                android:text="Material Delivered" />
 
             <Button
                 android:layout_width="wrap_content"
@@ -109,15 +108,18 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_column="1"
-                android:text="Vehicle Loaded" />
+                android:text="Material Installed"
+                android:onClick="selectfile"/>
 
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="80dp"
-                android:text="Verify" />
+                android:text="Verify"
+                android:onClick="OpenCamera" />
         </TableRow>
 
 
     </TableLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

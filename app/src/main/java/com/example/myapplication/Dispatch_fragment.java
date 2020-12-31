@@ -90,7 +90,7 @@ public class Dispatch_fragment extends Fragment {
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 // TODO Auto-generated method stub
                 String value=adapter.getItem(position);
-            //    System.out.println("amanponia"+value);
+
 
                 // go to challan activity
                 Intent intent = new Intent(getActivity(), Challanstatus.class);

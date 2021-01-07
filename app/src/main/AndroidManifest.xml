@@ -2,10 +2,12 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.myapplication">
 
+
     <uses-feature android:name="android.hardware.camera" android:required="true" />   // Camera
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />        // Location
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>  // file read and write
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET"/>             //internet
 
     <application
         android:allowBackup="true"

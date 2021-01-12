@@ -49,6 +49,7 @@ public class Dispatch_fragment extends Fragment {
     ListView listView;
     TextView textView;
     String[] listItem;
+    String role ;
 
     public Dispatch_fragment() {
         // Required empty public constructor
@@ -103,6 +104,7 @@ public class Dispatch_fragment extends Fragment {
 
 
 
+
         // set adapter : which is used to set data to UI
         final ArrayAdapter<String> adapter = new ArrayAdapter<String>(view.getContext(), R.layout.listlayout, R.id.tesstview, listItem);
         listView.setAdapter(adapter);
@@ -113,8 +115,22 @@ public class Dispatch_fragment extends Fragment {
                 // TODO Auto-generated method stub
                 String value=adapter.getItem(position);
                 // go to challan activity
-                Intent intent = new Intent(getActivity(), Challanstatus.class);
-                startActivity(intent);
+
+                role =   getArguments().getString("role");
+                if(role.equals("Supervisor")){
+                    Intent intent = new Intent(getActivity(), SupChallanstatus.class);
+                    intent.putExtra("Challan_no",value);
+                    intent.putExtra("CallType","Dispatch");
+                    startActivity(intent);
+                }
+                if(role.equals("Scaffolder")){
+                    Intent intent = new Intent(getActivity(), ScaffChallanstatus.class);
+                    intent.putExtra("Challan_no",value);
+                    intent.putExtra("CallType","Dispatch");
+                    startActivity(intent);
+                }
+
+
             }
         });
 

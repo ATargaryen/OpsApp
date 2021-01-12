@@ -32,6 +32,7 @@ public class Pickup_fragment extends Fragment {
     ListView listView;
     TextView textView;
     String[] listItem;
+    String role ;
 
     public Pickup_fragment() {
         // Required empty public constructor
@@ -62,6 +63,7 @@ public class Pickup_fragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
     }
 
     @Override
@@ -70,10 +72,12 @@ public class Pickup_fragment extends Fragment {
         // Inflate the layout for this fragment
         View view =   inflater.inflate(R.layout.fragment_dispatch, container, false);
 
+
         // intialize the var
          listView = (ListView) view.findViewById(R.id.listView);
         textView=(TextView) view.findViewById(R.id.tesstview);
-        listItem = getResources().getStringArray(R.array.Pickupchallan);
+     //   listItem = getResources().getStringArray(R.array.Pickupchallan);
+        listItem =  getArguments().getStringArray("challanlist");
 
         // set adapter : which is used to set data to UI
         final ArrayAdapter<String> adapter = new ArrayAdapter<String>(view.getContext(), R.layout.listlayout, R.id.tesstview, listItem);
@@ -84,11 +88,20 @@ public class Pickup_fragment extends Fragment {
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 // TODO Auto-generated method stub
                 String value=adapter.getItem(position);
-        //        System.out.println("amanponia"+value);
-
                 // go to challan activity
-                Intent intent = new Intent(getActivity(), ScaffChallanstatus.class);
-                startActivity(intent);
+                role =   getArguments().getString("role");
+                if(role.equals("Supervisor")){
+                    Intent intent = new Intent(getActivity(), SupChallanstatus.class);
+                    intent.putExtra("Challan_no",value);
+                    intent.putExtra("CallType","Pickup");
+                    startActivity(intent);
+                }
+                if(role.equals("Scaffolder")){
+                    Intent intent = new Intent(getActivity(), ScaffChallanstatus.class);
+                    intent.putExtra("Challan_no",value);
+                    intent.putExtra("CallType","Pickup");
+                    startActivity(intent);
+                }
 
             }
         });

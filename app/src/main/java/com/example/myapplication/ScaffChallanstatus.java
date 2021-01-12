@@ -21,6 +21,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -37,22 +38,49 @@ import com.example.myapplication.Geolocation;
 
 public class ScaffChallanstatus extends AppCompatActivity {
 
-
+    Context context;
+    private static ScaffChallanstatus ScaffChallanstatus_instance;
     FusedLocationProviderClient fusedLocationProviderClient;  // used in getting Location
     private static final int FILE_SELECT_CODE = 0;  // used in selecting file
     static final int REQUEST_IMAGE_CAPTURE = 1;   // used in capture image
 
     AlertDialog.Builder builder;  // used to show location to user
 
+    TextView text_challan_no ,Scaff_status_txt1 ,Scaff_status_txt2,Scaff_status_txt3;
+    private  String Challan_no;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scaffolder_challanstatus);
+        ScaffChallanstatus_instance = this ;
 
         fusedLocationProviderClient    = LocationServices.getFusedLocationProviderClient(this); // intialize
+        context = getBaseContext();
         builder = new AlertDialog.Builder(this);
 
+        text_challan_no = (TextView) findViewById(R.id.challanno);
+        Scaff_status_txt1 = (TextView) findViewById(R.id.Scaff_status_txt1);
+        Scaff_status_txt2 = (TextView) findViewById(R.id.Scaff_status_txt2);
+        Scaff_status_txt3 = (TextView) findViewById(R.id.Scaff_status_txt3);
 
+        Intent intent = getIntent();
+        Challan_no = intent.getStringExtra("Challan_no");
+        text_challan_no.setText(Challan_no);
+
+        String callFrom =  intent.getStringExtra("CallType");
+
+        if(callFrom.equals("Pickup")){
+            Scaff_status_txt1.setText("Reached at Location");
+            Scaff_status_txt2.setText("Pickup/Material Done");
+            Scaff_status_txt3.setText("Moved to Warehouse");
+        }
+
+
+    }
+
+    public static ScaffChallanstatus getInstance() {
+        return ScaffChallanstatus_instance;
     }
 
     public void Verify_geolocation(View view) {
@@ -93,7 +121,11 @@ public class ScaffChallanstatus extends AppCompatActivity {
                     List<Address> addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
 
                    // System.out.println("Aman Your Location at " + addresses.get(0).getAddressLine(0));
-                    alert(addresses.get(0).getAddressLine(0));  // Show  data to user
+
+                    BackendFunction backendFunction = new BackendFunction(context);
+                    String lat = String.valueOf(location.getLatitude());
+                    String lng = String.valueOf(location.getLongitude());
+                    backendFunction.storelocation(lng, lat , Challan_no);
 
                 } catch (IOException e) {
                     e.printStackTrace();

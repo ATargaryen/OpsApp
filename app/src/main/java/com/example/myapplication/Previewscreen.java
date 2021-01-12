@@ -9,7 +9,9 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 public class Previewscreen extends AppCompatActivity {
 
@@ -53,5 +55,8 @@ public class Previewscreen extends AppCompatActivity {
         }
 
 
+    }
+    public void uploadfile(View view){
+        Toast.makeText(getApplicationContext(),"uploaded",Toast.LENGTH_LONG).show();
     }
 }

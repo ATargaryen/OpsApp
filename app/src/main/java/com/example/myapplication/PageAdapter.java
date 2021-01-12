@@ -27,17 +27,25 @@ public class PageAdapter extends FragmentPagerAdapter
     @Override
     public Fragment getItem(int position)
     {
+        Bundle bundle = new Bundle();          // user to pass data from activity/class to Fragment
+        Login_activity login_activity= new Login_activity();
+        String role = login_activity.returnUserRole();
         switch (position)   // based on postion fragment loaded
         {
             case 0 :
-                Bundle bundle = new Bundle();          // user to pass data from activity/class to Fragment
-                Login_activity login_activity= new Login_activity();
-                String[] challanlist =  login_activity.getchallanlist();
+                String[] challanlist =  login_activity.returnDispatchlist();
                 bundle.putStringArray("challanlist", challanlist);
+                bundle.putString("role",role);
                 Dispatch_fragment fragobj = new Dispatch_fragment();
                 fragobj.setArguments(bundle);
                 return fragobj;
-            case 1 : return new Pickup_fragment();
+            case 1 :
+                String[] challanlist2 =  login_activity.returnPickuplist();
+                bundle.putStringArray("challanlist", challanlist2);
+                bundle.putString("role",role);
+                Pickup_fragment fragobj2 = new Pickup_fragment();
+                fragobj2.setArguments(bundle);
+                return fragobj2;
             default: return null;
         }
     }

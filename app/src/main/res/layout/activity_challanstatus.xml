@@ -41,11 +41,11 @@
         app:layout_constraintBottom_toTopOf="@+id/tablelayout">
 
         <TextView
-            android:id="@+id/textView1"
+            android:id="@+id/challanno"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:text="12345786896"
+            android:text="null"
             android:textSize="30sp"
             android:textAlignment="center"
             android:layout_gravity="center_horizontal"
@@ -74,12 +74,14 @@
             android:paddingTop="50dp">
 
             <TextView
+                android:id="@+id/Sup_status_txt1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_column="1"
                 android:text="Allocation of Material" />
 
             <Button
+                android:id="@+id/Sup_status_photobtn1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="80dp"
@@ -92,12 +94,14 @@
         <TableRow android:paddingTop="50dp">
 
             <TextView
+                android:id="@+id/Sup_status_txt2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_column="1"
                 android:text="Physical Verification" />
 
             <Button
+                android:id="@+id/Sup_status_vidbtn2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="80dp"
@@ -108,12 +112,14 @@
         <TableRow android:paddingTop="50dp">
 
             <TextView
+                android:id="@+id/Sup_status_txt3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_column="1"
                 android:text="Vehicle Loaded" />
 
             <Button
+                android:id="@+id/Sup_status_photobtn3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="80dp"

@@ -34,8 +34,10 @@ import java.util.zip.Inflater;
 public class Login_activity extends AppCompatActivity {
 
     EditText UsernameEt, PasswordEt;
-    String url = "http://192.168.0.40:8000/loginfvfd";
-    public static String[] Challanlist ;
+    String root_url = "https://6f674c9370d1.ngrok.io/";
+    public static String[] Dispatchlist ;
+    public static String[] Pickuplist ;
+    public static String role;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,35 +52,45 @@ public class Login_activity extends AppCompatActivity {
     }
 
     public void go_to_dashboard(View view) {
+        Dispatchlist = null;
+        Pickuplist = null;
+
         String username = UsernameEt.getText().toString();
         String password = PasswordEt.getText().toString();
         String type = "login";
 
         RequestQueue queue = Volley.newRequestQueue(this);
-       // String url ="https://9a56cd96edf0.ngrok.io/loginauth?user="+ username+"&password="+password ;
-        String url ="https://beaf9b92f6d7.ngrok.io/loginauth?user=amanponia@youngman.co.in&password=1234" ;
+        String url = root_url+"loginauth?user="+ username+"&password="+password ;
 
 // Request a string response from the provided URL.
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        // Display the first 500 characters of the response string
-
                         try {
                             JSONArray obj = new JSONArray(response);
                             for(int i=0; i < obj.length(); i++) {
                                 JSONObject jsonobject = obj.getJSONObject(i);
-                                String name       = jsonobject.getString("name");
-                                Toast.makeText(getApplicationContext(),name,Toast.LENGTH_LONG).show();
+                                String userid = jsonobject.getString("id");
+                                String name    = jsonobject.getString("name");
+                                role = jsonobject.getString("Role");
 
-                                getChallanlist();
-                             //   Intent intent = new Intent(Login_activity.this , Dashboard.class);
-                              //  startActivity(intent);
+
+                                if(role.equals("Supervisor")){
+                                    getSupDispatchChallans(userid,"Delivery");
+                                }
+                                if(role.equals("Scaffolder")){
+                                    getScaffDispatchChallans(userid,"Delivery");
+                                }
+                                //   Toast.makeText(getApplicationContext(),name,Toast.LENGTH_LONG).show();
+
+
+                                //   Intent intent = new Intent(Login_activity.this , Dashboard.class);
+                                //  startActivity(intent);
                             }
 
                         } catch (JSONException e) {
-                          //  e.printStackTrace();
+                            //  e.printStackTrace();
                             Toast.makeText(getApplicationContext(),"NOT AUTHENTICATED",Toast.LENGTH_LONG).show();
 
                         }
@@ -100,12 +112,11 @@ public class Login_activity extends AppCompatActivity {
 
     }
 
+    private void getScaffDispatchChallans(String userid, String type) {
 
-
-    private void getChallanlist() {
 
         RequestQueue queue = Volley.newRequestQueue(this);
-        String url ="https://beaf9b92f6d7.ngrok.io/supervisor_challan?userid=910&type=Delivery" ;
+        String url =root_url+"scaffolder_challan?userid="+userid +"&type="+type;
 
 // Request a string response from the provided URL.
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
@@ -115,15 +126,24 @@ public class Login_activity extends AppCompatActivity {
                         // Display the first 500 characters of the response string
                         try {
                             JSONArray obj = new JSONArray(response);
-                             Challanlist = new String[obj.length()] ;
+                            if(type.equals("Delivery")){ Dispatchlist = new String[obj.length()] ; }
+                            if(type.equals("Pickup")){ Pickuplist = new String[obj.length()] ;}
+
                             for(int i=0; i < obj.length(); i++) {
                                 JSONObject jsonobject = obj.getJSONObject(i);
                                 String name  = jsonobject.getString("challan_no"); System.out.println(name);
-                                Challanlist[i] = name;
+                                if(type.equals("Delivery")){ Dispatchlist[i] = name; }
+                                if(type.equals("Pickup")){ Pickuplist[i] = name; }
                             }
 
-                            Intent intent = new Intent(Login_activity.this , Dashboard.class);
-                            startActivity(intent);
+                            if(type.equals("Delivery")){
+                                getScaffDispatchChallans(userid,"Pickup");
+                            }
+
+                            if(type.equals("Pickup")){
+                                Intent intent = new Intent(Login_activity.this , Dashboard.class);
+                                startActivity(intent);
+                                ;}
                         } catch (JSONException e) {
                             //  e.printStackTrace();
                             Toast.makeText(getApplicationContext(),"NOT AUTHENTICATED",Toast.LENGTH_LONG).show();
@@ -145,8 +165,68 @@ public class Login_activity extends AppCompatActivity {
 
     }
 
-    public String[] getchallanlist(){
-        return Challanlist ;
+
+    private void getSupDispatchChallans(String userid , String type) {
+        RequestQueue queue = Volley.newRequestQueue(this);
+        String url =root_url+"supervisor_challan?userid="+userid +"&type="+type;
+
+// Request a string response from the provided URL.
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        // Display the first 500 characters of the response string
+                        try {
+                            JSONArray obj = new JSONArray(response);
+                            if(type.equals("Delivery")){ Dispatchlist = new String[obj.length()] ; }
+                            if(type.equals("Pickup")){ Pickuplist = new String[obj.length()] ;}
+
+                            for(int i=0; i < obj.length(); i++) {
+                                JSONObject jsonobject = obj.getJSONObject(i);
+                                String name  = jsonobject.getString("challan_no"); System.out.println(name);
+                                if(type.equals("Delivery")){ Dispatchlist[i] = name; }
+                                if(type.equals("Pickup")){ Pickuplist[i] = name; }
+                            }
+
+                            if(type.equals("Delivery")){
+                            getSupDispatchChallans(userid,"Pickup");
+                            }
+
+                            if(type.equals("Pickup")){
+                            Intent intent = new Intent(Login_activity.this , Dashboard.class);
+                            startActivity(intent);
+                            ;}
+                        } catch (JSONException e) {
+                            //  e.printStackTrace();
+                            Toast.makeText(getApplicationContext(),"NOT AUTHENTICATED",Toast.LENGTH_LONG).show();
+
+                        }
+
+
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+                System.out.println("error in getting challan");
+            }
+        });
+
+// Add the request to the RequestQueue.
+        queue.add(stringRequest);
+
+    }
+
+
+
+    public String[] returnDispatchlist(){
+        return Dispatchlist ;
+    }
+    public String[] returnPickuplist(){
+        return Pickuplist ;
+    }
+    public String returnUserRole(){
+        return role ;
     }
 
 }

@@ -10,24 +10,49 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 
 import com.example.myapplication.ScaffChallanstatus;
 
-public class Challanstatus extends AppCompatActivity {
+public class SupChallanstatus extends AppCompatActivity {
 
     static final int REQUEST_IMAGE_CAPTURE = 1;
     private static final int FILE_SELECT_CODE = 0;  // used in selecting file
     ImageView imageView;
     Bitmap imageBitmap;
+    TextView text_challan_no ,Sup_status_txt1 ,Sup_status_txt2,Sup_status_txt3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_challanstatus);
 
+        Intent intent = getIntent();
+
+        String Challan_no = intent.getStringExtra("Challan_no");
+
         imageView = (ImageView) findViewById(R.id.preview_imagescreen);
+        text_challan_no = (TextView) findViewById(R.id.challanno);
+        Sup_status_txt1 = (TextView) findViewById(R.id.Sup_status_txt1);
+        Sup_status_txt2 = (TextView) findViewById(R.id.Sup_status_txt2);
+        Sup_status_txt3 = (TextView) findViewById(R.id.Sup_status_txt3);
+
+
+
+        text_challan_no.setText(Challan_no);
+
+
+
+        String callFrom =  intent.getStringExtra("CallType");
+
+        if(callFrom.equals("Pickup")){
+            Sup_status_txt1.setText("Unloading  Done");
+            Sup_status_txt2.setText("Material Verification");
+            Sup_status_txt3.setText("Damage &  Segregation");
+        }
+
     }
 
     public void OpenCamera(View view) {

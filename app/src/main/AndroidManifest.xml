@@ -18,7 +18,7 @@
         android:theme="@style/Theme.MyApplication">
         <activity android:name=".ScaffChallanstatus"></activity>
         <activity android:name=".Previewscreen" />
-        <activity android:name=".Challanstatus" />
+        <activity android:name=".SupChallanstatus" />
         <activity android:name=".Dashboard" />
         <activity android:name=".Login_activity" />
         <activity android:name=".MainActivity">

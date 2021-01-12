@@ -39,7 +39,7 @@
         app:layout_constraintBottom_toTopOf="@+id/tablelayout">
 
         <TextView
-            android:id="@+id/textView1"
+            android:id="@+id/challanno"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
@@ -72,6 +72,7 @@
             android:paddingTop="50dp">
 
             <TextView
+                android:id="@+id/Scaff_status_txt1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_column="1"
@@ -90,6 +91,7 @@
         <TableRow android:paddingTop="50dp">
 
             <TextView
+                android:id="@+id/Scaff_status_txt2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_column="1"
@@ -106,6 +108,7 @@
         <TableRow android:paddingTop="50dp">
 
             <TextView
+                android:id="@+id/Scaff_status_txt3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_column="1"

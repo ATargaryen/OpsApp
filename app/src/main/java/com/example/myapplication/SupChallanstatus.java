@@ -24,6 +24,8 @@ public class SupChallanstatus extends AppCompatActivity {
     Bitmap imageBitmap;
     TextView text_challan_no ,Sup_status_txt1 ,Sup_status_txt2,Sup_status_txt3;
 
+    private  String Challan_no;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,14 +33,13 @@ public class SupChallanstatus extends AppCompatActivity {
 
         Intent intent = getIntent();
 
-        String Challan_no = intent.getStringExtra("Challan_no");
+        Challan_no = intent.getStringExtra("Challan_no");
 
         imageView = (ImageView) findViewById(R.id.preview_imagescreen);
         text_challan_no = (TextView) findViewById(R.id.challanno);
         Sup_status_txt1 = (TextView) findViewById(R.id.Sup_status_txt1);
         Sup_status_txt2 = (TextView) findViewById(R.id.Sup_status_txt2);
         Sup_status_txt3 = (TextView) findViewById(R.id.Sup_status_txt3);
-
 
 
         text_challan_no.setText(Challan_no);

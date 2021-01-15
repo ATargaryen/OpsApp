@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/Young_Grey4"
-    tools:context=".Challanstatus">
+    tools:context=".SupChallanstatus">
 
 
 
@@ -85,10 +85,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="80dp"
-                android:text="Verify"
                 android:onClick="OpenCamera"
 
-                />
+                android:text="Verify" />
         </TableRow>
 
         <TableRow android:paddingTop="50dp">
@@ -105,8 +104,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="80dp"
-                android:text="verify"
-                android:onClick="selectvideo"/>
+                android:onClick="selectvideo"
+                android:text="verify" />
         </TableRow>
 
         <TableRow android:paddingTop="50dp">
@@ -123,8 +122,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="80dp"
-                android:text="Verify"
-                android:onClick="OpenCamera"/>
+                android:onClick="OpenCamera"
+                android:text="Verify" />
         </TableRow>
 
 

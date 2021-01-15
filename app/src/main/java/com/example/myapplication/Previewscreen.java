@@ -2,10 +2,12 @@ package com.example.myapplication;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -18,6 +20,7 @@ public class Previewscreen extends AppCompatActivity {
     ImageView imageview;
     Bitmap bitmap ;
     int Source ;
+    Context mContext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +59,12 @@ public class Previewscreen extends AppCompatActivity {
 
 
     }
-    public void uploadfile(View view){
-        Toast.makeText(getApplicationContext(),"uploaded",Toast.LENGTH_LONG).show();
+    public void uploadfile(View view ){
+
+        Bitmap imagebitmap = ((BitmapDrawable)imageview.getDrawable()).getBitmap();
+        BackendFunction backendFunction = new BackendFunction(this);
+        backendFunction.uploadMedia(imagebitmap,"Gno/19-20/D221","vehicle_loaded_unloaded","Supervisor");
+
+      //  Toast.makeText(getApplicationContext(),"uploaded",Toast.LENGTH_LONG).show();
     }
 }

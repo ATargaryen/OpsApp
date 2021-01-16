@@ -79,6 +79,7 @@
                 android:text="Vehicle Reached Site" />
 
             <Button
+                android:id="@+id/Sup_status_locbtn1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="80dp"
@@ -98,11 +99,11 @@
                 android:text="Material Delivered" />
 
             <Button
+                android:id="@+id/Scaff_status_photobtn2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="80dp"
-                android:text="verify"
-                android:onClick="selectfile"/>
+                android:text="verify" />
         </TableRow>
 
         <TableRow android:paddingTop="50dp">
@@ -116,11 +117,11 @@
                 />
 
             <Button
+                android:id="@+id/Scaff_status_photobtn3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="80dp"
-                android:text="Verify"
-                android:onClick="OpenCamera" />
+                android:text="Verify" />
         </TableRow>
 
 

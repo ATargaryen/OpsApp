@@ -21,6 +21,7 @@ public class Previewscreen extends AppCompatActivity {
     Bitmap bitmap ;
     int Source ;
     Context mContext;
+    private  String Challan_no , Action ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +33,8 @@ public class Previewscreen extends AppCompatActivity {
         Intent intent = getIntent();
 
         Source = intent.getIntExtra("data",0);
+        Challan_no = intent.getStringExtra("Challan_no");
+        Action = intent.getStringExtra("Action");
 
 
 
@@ -63,7 +66,7 @@ public class Previewscreen extends AppCompatActivity {
 
         Bitmap imagebitmap = ((BitmapDrawable)imageview.getDrawable()).getBitmap();
         BackendFunction backendFunction = new BackendFunction(this);
-        backendFunction.uploadMedia(imagebitmap,"Gno/19-20/D221","vehicle_loaded_unloaded","Supervisor");
+        backendFunction.uploadMedia(imagebitmap,Challan_no,Action,Constant.ROLE);
 
       //  Toast.makeText(getApplicationContext(),"uploaded",Toast.LENGTH_LONG).show();
     }

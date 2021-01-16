@@ -1,9 +1,12 @@
 package com.example.myapplication;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.AsyncTask;
+import android.provider.MediaStore;
 import android.util.Base64;
 import android.util.Log;
 import android.widget.Toast;
@@ -23,18 +26,32 @@ import com.android.volley.toolbox.Volley;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
+import android.database.Cursor;
+
 public class BackendFunction  extends AsyncTask<Bitmap,Void,String>{
-    private Context context;
+    private static  Context context;
     private String Challan_no = "default" ;
     private String Action = "default";
     private String Role = "default" ;
     private String MEDIA = null ;
+
+   static int serverResponseCode;
 
 
     public BackendFunction(Context context){
@@ -45,7 +62,7 @@ public class BackendFunction  extends AsyncTask<Bitmap,Void,String>{
     public void storelocation(String  longitude , String lattitude , String challan_no ){
 
         RequestQueue queue = Volley.newRequestQueue(context);
-        String url ="https://6f674c9370d1.ngrok.io/storelocation?longitude="+longitude+"&lattitude="+lattitude +"&challanid="+challan_no;
+        String url = Constant.ROOT_URL+"storelocation?longitude="+longitude+"&lattitude="+lattitude +"&challanid="+challan_no;
 
 // Request a string response from the provided URL.
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
@@ -139,6 +156,117 @@ public class BackendFunction  extends AsyncTask<Bitmap,Void,String>{
     protected void onProgressUpdate(Void... values) {
         super.onProgressUpdate(values);  // eq.. SHow Downloading percentage   .. process update
     }
+
+
+
+    public static void Video_Upload(String sourceFileUri , String challan_no, String action, String role ) {
+        String upLoadServerUri =  Constant.ROOT_URL + "challanverify";
+        String fileName = sourceFileUri;
+        String[] data = {action,challan_no,role};
+
+        // RUN UPLOAD CODE IN BACKGROUND SO IT DO NOT INTERUPT THE MAIN THREAD PROCESS OR HOLD THE UI
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try  {
+                    //Your code goes here
+                    String response =   upload_to_server(sourceFileUri ,data);
+                 System.out.println("[RESPONSE]  :"+response);
+
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        thread.start();
+    } // end upLoad2Server
+
+    public static String upload_to_server(String file , String[] Data) {
+
+        String fileName = file;
+        HttpURLConnection conn = null;
+        DataOutputStream dos = null;
+        String lineEnd = "\r\n";
+        String twoHyphens = "--";
+        String boundary = "*****";
+        int bytesRead, bytesAvailable, bufferSize;
+        byte[] buffer;
+        int maxBufferSize = 1 * 1024 * 1024;
+
+        File sourceFile = new File(file);
+        if (!sourceFile.isFile()) {
+            Log.e("Huzza", "Source File Does not exist");
+            return null;
+        }
+
+        try {
+            FileInputStream fileInputStream = new FileInputStream(sourceFile);
+            URL url = new URL(Constant.ROOT_URL + "challanverify");
+            conn = (HttpURLConnection) url.openConnection();
+            conn.setDoInput(true);
+            conn.setDoOutput(true);
+            conn.setUseCaches(false);
+            conn.setRequestMethod("POST");
+            conn.setRequestProperty("Connection", "Keep-Alive");
+            conn.setRequestProperty("ENCTYPE", "multipart/form-data");
+            conn.setRequestProperty("Content-Type", "multipart/form-data;boundary=" + boundary);
+            conn.setRequestProperty("myFile", fileName);
+            conn.setRequestProperty("data",String.valueOf(Data));
+            dos = new DataOutputStream(conn.getOutputStream());
+            dos.writeBytes(twoHyphens + boundary + lineEnd);
+            dos.writeBytes("Content-Disposition: form-data; name=\"myFile\";filename=\"" + fileName + "\"" + lineEnd);
+            dos.writeBytes(lineEnd);
+         /*   {"myFile":{"name":"VID_20210116_150549782.mp4","type":"","tmp_name":"\/tmp\/php7Gjtsn","error":0,"size":1857196}}   ON SERVER YOU FINE THIS FORMAT (return $_FILES)
+            move_uploaded_file($_FILES["myFile"]["tmp_name"], $_FILES["myFile"]["name"]); */
+            bytesAvailable = fileInputStream.available();
+            Log.i("Huzza", "Initial .available : " + bytesAvailable);
+
+            bufferSize = Math.min(bytesAvailable, maxBufferSize);
+            buffer = new byte[bufferSize];
+
+            bytesRead = fileInputStream.read(buffer, 0, bufferSize);
+
+            while (bytesRead > 0) {
+                dos.write(buffer, 0, bufferSize);
+                bytesAvailable = fileInputStream.available();
+                bufferSize = Math.min(bytesAvailable, maxBufferSize);
+                bytesRead = fileInputStream.read(buffer, 0, bufferSize);
+            }
+
+            dos.writeBytes(lineEnd);
+            dos.writeBytes(twoHyphens + boundary + twoHyphens + lineEnd);
+
+            serverResponseCode = conn.getResponseCode();
+
+            fileInputStream.close();
+            dos.flush();
+            dos.close();
+        } catch (MalformedURLException ex) {
+            ex.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        if (serverResponseCode == 200) {
+            StringBuilder sb = new StringBuilder();
+            try {
+                BufferedReader rd = new BufferedReader(new InputStreamReader(conn
+                        .getInputStream()));
+                String line;
+                while ((line = rd.readLine()) != null) {
+                    sb.append(line);
+                }
+                rd.close();
+            } catch (IOException ioex) {
+            }
+            return sb.toString();
+        }else {
+            return "Could not upload";
+        }
+    }
+
 }
 
 /*---------------------------------------- AsyncTask -------------------------------*/

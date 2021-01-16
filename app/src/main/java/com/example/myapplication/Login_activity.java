@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 
+import android.widget.Spinner;
 import android.widget.Toast;
 
 
@@ -40,6 +41,7 @@ public class Login_activity extends AppCompatActivity {
     public static String[] Dispatchlist;
     public static String[] Pickuplist;
     public static String role;
+    Spinner spinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +50,7 @@ public class Login_activity extends AppCompatActivity {
 
         UsernameEt = (EditText) findViewById(R.id.User_email);
         PasswordEt = (EditText) findViewById(R.id.UserPassword);
+
     }
 
     public void OnLogin(View view) {
@@ -61,7 +64,7 @@ public class Login_activity extends AppCompatActivity {
         String username = UsernameEt.getText().toString();
         String password = PasswordEt.getText().toString();
         username = "amanponia@youngman.co.in"; password = "1234";
-        String type = "login";
+        String type = "NO INTERNET";
 
         RequestQueue queue = Volley.newRequestQueue(this);
         String url = Constant.ROOT_URL + "loginauth?user=" + username + "&password=" + password;
@@ -117,7 +120,6 @@ public class Login_activity extends AppCompatActivity {
     }
 
     private void getScaffDispatchChallans(String userid, String type) {
-
 
         RequestQueue queue = Volley.newRequestQueue(this);
         String url = Constant.ROOT_URL + "scaffolder_challan?userid=" + userid + "&type=" + type;

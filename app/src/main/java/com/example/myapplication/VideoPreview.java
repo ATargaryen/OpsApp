@@ -14,6 +14,8 @@ import android.widget.VideoView;
 
 import java.net.URI;
 
+import nl.bravobit.ffmpeg.exceptions.FFmpegCommandAlreadyRunningException;
+
 public class VideoPreview extends AppCompatActivity  {
     VideoView videoView;
   private   Uri video_data ;
@@ -47,9 +49,11 @@ public class VideoPreview extends AppCompatActivity  {
 
     }
 
-    public void UploadVideo(View view){
+    public void UploadVideo(View view) throws FFmpegCommandAlreadyRunningException {
         BackendFunction backendFunction = new BackendFunction(this);
-        backendFunction.Video_Upload(VideoPath,Challan_no,Action,Constant.ROLE);
+      //  backendFunction.Video_Upload(VideoPath,Challan_no,Action,Constant.ROLE);
+
+        backendFunction.CompressVideo(VideoPath);
     }
 }
 

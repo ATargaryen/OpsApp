@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Base64;
 import android.util.Log;
@@ -43,6 +44,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 import android.database.Cursor;
+
+import nl.bravobit.ffmpeg.ExecuteBinaryResponseHandler;
+import nl.bravobit.ffmpeg.FFmpeg;
+import nl.bravobit.ffmpeg.exceptions.FFmpegCommandAlreadyRunningException;
 
 public class BackendFunction  extends AsyncTask<Bitmap,Void,String>{
     private static  Context context;
@@ -267,9 +272,69 @@ public class BackendFunction  extends AsyncTask<Bitmap,Void,String>{
         }
     }
 
+    private String getAppDir() { // get the path of storage directory
+        return Environment.getExternalStorageDirectory().getAbsolutePath();
+    }
+    public  void CompressVideo(String videoPath) throws FFmpegCommandAlreadyRunningException {
+        // this method is used to compress the video via "fast-forward mpeg"
+      //  implementation 'nl.bravobit:android-ffmpeg:1.1.1' // video compress  Dependency add it in gradle
+
+        String inputVideoPath = videoPath ;                 // video path
+        String outputPath = getAppDir() + "/"+String.valueOf(323) +"video_compress.mp4"; // output file path
+        String[] commandArray = new String[]{"-y", "-i", inputVideoPath, "-s", "720x480", "-r", "25",                  // command to execute
+                "-vcodec", "mpeg4", "-b:v", "300k", "-b:a", "48000", "-ac", "2", "-ar", "22050", outputPath};
+
+        if (FFmpeg.getInstance(context).isSupported()) {
+            // ffmpeg is supported
+            System.out.println("supported");
+
+            FFmpeg ffmpeg = FFmpeg.getInstance(context);
+            // to execute "ffmpeg -version" command you just need to pass "-version"
+            ffmpeg.execute(commandArray, new ExecuteBinaryResponseHandler() {
+
+                @Override
+                public void onStart() {
+                    Log.e("FFmpeg", "onStart");
+                }
+
+                @Override
+                public void onProgress(String message) {
+                    Log.e("FFmpeg onProgress? ", message);
+                }
+
+                @Override
+                public void onFailure(String message) {
+                    Log.e("FFmpeg onFailure? ", message);
+                }
+
+                @Override
+                public void onSuccess(String message) {
+                    Log.e("FFmpeg onSuccess? ", message);
+
+                }
+
+                @Override
+                public void onFinish() {
+                    System.out.println("converted output file path is"+outputPath);
+                    Video_Upload(outputPath,Challan_no,Action,Constant.ROLE);        // Now upload the compressed file to server
+                }
+
+            });
+
+        } else {
+            // ffmpeg is not supported
+            System.out.println("Not Supported");
+        }
+
+    }
 }
 
 /*---------------------------------------- AsyncTask -------------------------------*/
 /* AsyncTask is used to do heavy processing (HTTP request who took more time,DB operation ,  image processing ) in another thread (doInBackground) because if main thread do such thing its hold or stop the App UI execution ....
 So better approach is do such things in another thread ,, many other thing also for doing Async is one of them
+ */
+
+
+/*
+
  */

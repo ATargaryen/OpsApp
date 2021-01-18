@@ -50,10 +50,10 @@ public class VideoPreview extends AppCompatActivity  {
     }
 
     public void UploadVideo(View view) throws FFmpegCommandAlreadyRunningException {
-        BackendFunction backendFunction = new BackendFunction(this);
-      //  backendFunction.Video_Upload(VideoPath,Challan_no,Action,Constant.ROLE);
 
-        backendFunction.CompressVideo(VideoPath);
+        BackendFunction backendFunction = new BackendFunction(this);
+        backendFunction.Compress_and_upload_Video(VideoPath,Challan_no,Action,Constant.ROLE);
+
     }
 }
 

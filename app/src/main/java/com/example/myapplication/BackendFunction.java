@@ -162,127 +162,14 @@ public class BackendFunction  extends AsyncTask<Bitmap,Void,String>{
         super.onProgressUpdate(values);  // eq.. SHow Downloading percentage   .. process update
     }
 
-
-
-    public static void Video_Upload(String sourceFileUri , String challan_no, String action, String role ) {
-        String upLoadServerUri =  Constant.ROOT_URL + "challanverify";
-        String fileName = sourceFileUri;
-        String[] data = {action,challan_no,role};
-
-        // RUN UPLOAD CODE IN BACKGROUND SO IT DO NOT INTERUPT THE MAIN THREAD PROCESS OR HOLD THE UI
-        Thread thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try  {
-                    //Your code goes here
-                    String response =   upload_to_server(sourceFileUri ,data);
-                 System.out.println("[RESPONSE]  :"+response);
-
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-
-        thread.start();
-    } // end upLoad2Server
-
-    public static String upload_to_server(String file , String[] Data) {
-
-        String fileName = file;
-        HttpURLConnection conn = null;
-        DataOutputStream dos = null;
-        String lineEnd = "\r\n";
-        String twoHyphens = "--";
-        String boundary = "*****";
-        int bytesRead, bytesAvailable, bufferSize;
-        byte[] buffer;
-        int maxBufferSize = 1 * 1024 * 1024;
-
-        File sourceFile = new File(file);
-        if (!sourceFile.isFile()) {
-            Log.e("Huzza", "Source File Does not exist");
-            return null;
-        }
-
-        try {
-            FileInputStream fileInputStream = new FileInputStream(sourceFile);
-            URL url = new URL(Constant.ROOT_URL + "challanverify");
-            conn = (HttpURLConnection) url.openConnection();
-            conn.setDoInput(true);
-            conn.setDoOutput(true);
-            conn.setUseCaches(false);
-            conn.setRequestMethod("POST");
-            conn.setRequestProperty("Connection", "Keep-Alive");
-            conn.setRequestProperty("ENCTYPE", "multipart/form-data");
-            conn.setRequestProperty("Content-Type", "multipart/form-data;boundary=" + boundary);
-            conn.setRequestProperty("myFile", fileName);
-            conn.setRequestProperty("data",String.valueOf(Data));
-            dos = new DataOutputStream(conn.getOutputStream());
-            dos.writeBytes(twoHyphens + boundary + lineEnd);
-            dos.writeBytes("Content-Disposition: form-data; name=\"myFile\";filename=\"" + fileName + "\"" + lineEnd);
-            dos.writeBytes(lineEnd);
-         /*   {"myFile":{"name":"VID_20210116_150549782.mp4","type":"","tmp_name":"\/tmp\/php7Gjtsn","error":0,"size":1857196}}   ON SERVER YOU FINE THIS FORMAT (return $_FILES)
-            move_uploaded_file($_FILES["myFile"]["tmp_name"], $_FILES["myFile"]["name"]); */
-            bytesAvailable = fileInputStream.available();
-            Log.i("Huzza", "Initial .available : " + bytesAvailable);
-
-            bufferSize = Math.min(bytesAvailable, maxBufferSize);
-            buffer = new byte[bufferSize];
-
-            bytesRead = fileInputStream.read(buffer, 0, bufferSize);
-
-            while (bytesRead > 0) {
-                dos.write(buffer, 0, bufferSize);
-                bytesAvailable = fileInputStream.available();
-                bufferSize = Math.min(bytesAvailable, maxBufferSize);
-                bytesRead = fileInputStream.read(buffer, 0, bufferSize);
-            }
-
-            dos.writeBytes(lineEnd);
-            dos.writeBytes(twoHyphens + boundary + twoHyphens + lineEnd);
-
-            serverResponseCode = conn.getResponseCode();
-
-            fileInputStream.close();
-            dos.flush();
-            dos.close();
-        } catch (MalformedURLException ex) {
-            ex.printStackTrace();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        if (serverResponseCode == 200) {
-            StringBuilder sb = new StringBuilder();
-            try {
-                BufferedReader rd = new BufferedReader(new InputStreamReader(conn
-                        .getInputStream()));
-                String line;
-                while ((line = rd.readLine()) != null) {
-                    sb.append(line);
-                }
-                rd.close();
-            } catch (IOException ioex) {
-            }
-            return sb.toString();
-        }else {
-            return "Could not upload";
-        }
-    }
-
-    private String getAppDir() { // get the path of storage directory
-        return Environment.getExternalStorageDirectory().getAbsolutePath();
-    }
-    public  void CompressVideo(String videoPath) throws FFmpegCommandAlreadyRunningException {
+    public  void Compress_and_upload_Video(String OrginalPath , String challan_no, String action, String role ) throws FFmpegCommandAlreadyRunningException {
         // this method is used to compress the video via "fast-forward mpeg"
-      //  implementation 'nl.bravobit:android-ffmpeg:1.1.1' // video compress  Dependency add it in gradle
+        //  implementation 'nl.bravobit:android-ffmpeg:1.1.1' // video compress  Dependency add it in gradle
 
-        String inputVideoPath = videoPath ;                 // video path
-        String outputPath = getAppDir() + "/"+String.valueOf(323) +"video_compress.mp4"; // output file path
-        String[] commandArray = new String[]{"-y", "-i", inputVideoPath, "-s", "720x480", "-r", "25",                  // command to execute
-                "-vcodec", "mpeg4", "-b:v", "300k", "-b:a", "48000", "-ac", "2", "-ar", "22050", outputPath};
+        String orginal_path = OrginalPath ;                 // video path
+        String compressed_path = getAppDir() + "/"+String.valueOf(3283) +"video_compress.mp4"; // output file path
+        String[] commandArray = new String[]{"-y", "-i", orginal_path, "-s", "720x480", "-r", "25",                  // command to execute
+                "-vcodec", "mpeg4", "-b:v", "300k", "-b:a", "48000", "-ac", "2", "-ar", "22050", compressed_path};
 
         if (FFmpeg.getInstance(context).isSupported()) {
             // ffmpeg is supported
@@ -315,8 +202,8 @@ public class BackendFunction  extends AsyncTask<Bitmap,Void,String>{
 
                 @Override
                 public void onFinish() {
-                    System.out.println("converted output file path is"+outputPath);
-                    Video_Upload(outputPath,Challan_no,Action,Constant.ROLE);        // Now upload the compressed file to server
+                    System.out.println("converted output file path is"+compressed_path);
+                    Video_Upload(compressed_path,challan_no,action,role);        // Now upload the compressed file to server
                 }
 
             });
@@ -327,6 +214,116 @@ public class BackendFunction  extends AsyncTask<Bitmap,Void,String>{
         }
 
     }
+
+
+    public static void Video_Upload(String video_path , String challan_no, String action, String role ) {
+        // RUN UPLOAD CODE IN BACKGROUND SO IT DO NOT INTERUPT THE MAIN THREAD PROCESS OR HOLD THE UI
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try  {
+                    //Your code goes here
+
+
+                    String response =   upload_to_server(video_path,challan_no,action,role);
+                    System.out.println("[RESPONSE]  :"+response);
+
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        thread.start();
+    }
+
+    public static String upload_to_server(String file ,String challan_no, String action, String role) {
+        String fileName = file;
+        HttpURLConnection conn = null;
+        DataOutputStream dos = null;
+        String lineEnd = "\r\n";
+        String twoHyphens = "--";
+        String boundary = "*****";
+        int bytesRead, bytesAvailable, bufferSize;
+        byte[] buffer;
+        int maxBufferSize = 1 * 1024 * 1024;
+
+        File sourceFile = new File(file);
+        if (!sourceFile.isFile()) {
+            Log.e("Huzza", "Source File Does not exist");
+            return null;
+        }
+
+        try {
+            FileInputStream fileInputStream = new FileInputStream(sourceFile);
+            URL url = new URL(Constant.ROOT_URL + "challanverify?challan_no="+challan_no+"&action="+action+"&role="+role);
+            conn = (HttpURLConnection) url.openConnection();
+            conn.setDoInput(true);
+            conn.setDoOutput(true);
+            conn.setUseCaches(false);
+            conn.setRequestMethod("POST");
+            conn.setRequestProperty("Connection", "Keep-Alive");
+            conn.setRequestProperty("ENCTYPE", "multipart/form-data");
+            conn.setRequestProperty("Content-Type", "multipart/form-data;boundary=" + boundary);
+            conn.setRequestProperty("myFile", fileName);
+            dos = new DataOutputStream(conn.getOutputStream());
+            dos.writeBytes(twoHyphens + boundary + lineEnd);
+            dos.writeBytes("Content-Disposition: form-data; name=\"myFile\";filename=\"" + fileName + "\"" + lineEnd);
+            dos.writeBytes(lineEnd);
+         /*   {"myFile":{"name":"VID_20210116_150549782.mp4","type":"","tmp_name":"\/tmp\/php7Gjtsn","error":0,"size":1857196}}   ON SERVER YOU FINE THIS FORMAT (return $_FILES)
+            move_uploaded_file($_FILES["myFile"]["tmp_name"], $_FILES["myFile"]["name"]); */
+            bytesAvailable = fileInputStream.available();
+            Log.i("Huzza", "Initial .available : " + bytesAvailable);
+
+            bufferSize = Math.min(bytesAvailable, maxBufferSize);
+            buffer = new byte[bufferSize];
+
+            bytesRead = fileInputStream.read(buffer, 0, bufferSize);
+
+            while (bytesRead > 0) {
+                dos.write(buffer, 0, bufferSize);
+                bytesAvailable = fileInputStream.available();
+                bufferSize = Math.min(bytesAvailable, maxBufferSize);
+                bytesRead = fileInputStream.read(buffer, 0, bufferSize);
+            }
+
+            dos.writeBytes(lineEnd);
+            dos.writeBytes(twoHyphens + boundary + twoHyphens + lineEnd);
+
+            serverResponseCode = conn.getResponseCode(); System.out.println("message"+conn.getResponseMessage());
+
+            fileInputStream.close();
+            dos.flush();
+            dos.close();
+        } catch (MalformedURLException ex) {
+            ex.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+       // if (serverResponseCode == 200) {
+        System.out.println("[RESPONSE_CODE] : "+serverResponseCode);
+            StringBuilder sb = new StringBuilder();
+            try {
+                BufferedReader rd = new BufferedReader(new InputStreamReader(conn
+                        .getInputStream()));
+                String line;
+                while ((line = rd.readLine()) != null) {
+                    sb.append(line);
+                }
+                rd.close();
+            } catch (IOException ioex) {
+            }
+            return sb.toString();
+       // }else {
+      //      return "Could not upload";
+       // }
+    }
+
+    private String getAppDir() { // get the path of storage directory
+        return Environment.getExternalStorageDirectory().getAbsolutePath();
+    }
+
 }
 
 /*---------------------------------------- AsyncTask -------------------------------*/

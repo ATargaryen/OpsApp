@@ -12,6 +12,9 @@ import android.widget.ImageView;
 import android.widget.MediaController;
 import android.widget.VideoView;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.net.URI;
 
 import nl.bravobit.ffmpeg.exceptions.FFmpegCommandAlreadyRunningException;
@@ -51,10 +54,22 @@ public class VideoPreview extends AppCompatActivity  {
 
     public void UploadVideo(View view) throws FFmpegCommandAlreadyRunningException {
 
-        BackendFunction backendFunction = new BackendFunction(this);
-        backendFunction.Compress_and_upload_Video(VideoPath,Challan_no,Action,Constant.ROLE);
+            JSONObject data = new JSONObject();
 
-    }
+            try {
+                data.put("challanid", Challan_no);
+                data.put("action", Action);
+                data.put("userRole", Constant.ROLE);
+
+                BackendFunction backendFunction = new BackendFunction(this);
+                backendFunction.Compress_and_upload_Video(VideoPath, data);
+
+            } catch (JSONException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+
+        }
 }
 
 /*          thumbnail of a video

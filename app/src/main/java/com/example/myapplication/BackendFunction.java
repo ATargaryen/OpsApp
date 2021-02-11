@@ -41,6 +41,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 import android.database.Cursor;
@@ -56,7 +57,7 @@ public class BackendFunction  extends AsyncTask<Bitmap,Void,String>{
     private String Role = "default" ;
     private String MEDIA = null ;
 
-   static int serverResponseCode;
+    static int serverResponseCode;
 
 
     public BackendFunction(Context context){
@@ -69,7 +70,7 @@ public class BackendFunction  extends AsyncTask<Bitmap,Void,String>{
         RequestQueue queue = Volley.newRequestQueue(context);
         String url = Constant.ROOT_URL+"storelocation?longitude="+longitude+"&lattitude="+lattitude +"&challanid="+challan_no;
 
-// Request a string response from the provided URL.
+        // Request a string response from the provided URL.
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
                 new Response.Listener<String>() {
                     @Override
@@ -83,7 +84,7 @@ public class BackendFunction  extends AsyncTask<Bitmap,Void,String>{
             }
         });
 
-// Add the request to the RequestQueue.
+        // Add the request to the RequestQueue.
         queue.add(stringRequest);
 
     }
@@ -162,12 +163,12 @@ public class BackendFunction  extends AsyncTask<Bitmap,Void,String>{
         super.onProgressUpdate(values);  // eq.. SHow Downloading percentage   .. process update
     }
 
-    public  void Compress_and_upload_Video(String OrginalPath , String challan_no, String action, String role ) throws FFmpegCommandAlreadyRunningException {
+    public  void Compress_and_upload_Video(String OrginalPath ,JSONObject Data) throws FFmpegCommandAlreadyRunningException {
         // this method is used to compress the video via "fast-forward mpeg"
         //  implementation 'nl.bravobit:android-ffmpeg:1.1.1' // video compress  Dependency add it in gradle
 
         String orginal_path = OrginalPath ;                 // video path
-        String compressed_path = getAppDir() + "/"+String.valueOf(3283) +"video_compress.mp4"; // output file path
+        String compressed_path = getAppDir() + "/"+String.valueOf(1111) +"video_compress.mp4"; // output file path
         String[] commandArray = new String[]{"-y", "-i", orginal_path, "-s", "720x480", "-r", "25",                  // command to execute
                 "-vcodec", "mpeg4", "-b:v", "300k", "-b:a", "48000", "-ac", "2", "-ar", "22050", compressed_path};
 
@@ -203,7 +204,7 @@ public class BackendFunction  extends AsyncTask<Bitmap,Void,String>{
                 @Override
                 public void onFinish() {
                     System.out.println("converted output file path is"+compressed_path);
-                    Video_Upload(compressed_path,challan_no,action,role);        // Now upload the compressed file to server
+                    Video_Upload(compressed_path,Data);        // Now upload the compressed file to server
                 }
 
             });
@@ -216,16 +217,13 @@ public class BackendFunction  extends AsyncTask<Bitmap,Void,String>{
     }
 
 
-    public static void Video_Upload(String video_path , String challan_no, String action, String role ) {
+    public static void Video_Upload(String video_path ,JSONObject Data ) {
         // RUN UPLOAD CODE IN BACKGROUND SO IT DO NOT INTERUPT THE MAIN THREAD PROCESS OR HOLD THE UI
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
-                try  {
-                    //Your code goes here
-
-
-                    String response =   upload_to_server(video_path,challan_no,action,role);
+                try{
+                    String response =   upload_to_server(video_path,Data);
                     System.out.println("[RESPONSE]  :"+response);
 
 
@@ -237,7 +235,7 @@ public class BackendFunction  extends AsyncTask<Bitmap,Void,String>{
         thread.start();
     }
 
-    public static String upload_to_server(String file ,String challan_no, String action, String role) {
+    public static String upload_to_server(String file , JSONObject Data) {
         String fileName = file;
         HttpURLConnection conn = null;
         DataOutputStream dos = null;
@@ -256,7 +254,7 @@ public class BackendFunction  extends AsyncTask<Bitmap,Void,String>{
 
         try {
             FileInputStream fileInputStream = new FileInputStream(sourceFile);
-            URL url = new URL(Constant.ROOT_URL + "challanverify?challan_no="+challan_no+"&action="+action+"&role="+role);
+            URL url = new URL(Constant.ROOT_URL + "challanverify");
             conn = (HttpURLConnection) url.openConnection();
             conn.setDoInput(true);
             conn.setDoOutput(true);
@@ -267,7 +265,9 @@ public class BackendFunction  extends AsyncTask<Bitmap,Void,String>{
             conn.setRequestProperty("Content-Type", "multipart/form-data;boundary=" + boundary);
             conn.setRequestProperty("myFile", fileName);
             dos = new DataOutputStream(conn.getOutputStream());
-            dos.writeBytes(twoHyphens + boundary + lineEnd);
+            dos.writeBytes(twoHyphens + boundary + lineEnd); //open
+
+            /*------------------POST_FILE------------------------------*/
             dos.writeBytes("Content-Disposition: form-data; name=\"myFile\";filename=\"" + fileName + "\"" + lineEnd);
             dos.writeBytes(lineEnd);
          /*   {"myFile":{"name":"VID_20210116_150549782.mp4","type":"","tmp_name":"\/tmp\/php7Gjtsn","error":0,"size":1857196}}   ON SERVER YOU FINE THIS FORMAT (return $_FILES)
@@ -288,7 +288,34 @@ public class BackendFunction  extends AsyncTask<Bitmap,Void,String>{
             }
 
             dos.writeBytes(lineEnd);
-            dos.writeBytes(twoHyphens + boundary + twoHyphens + lineEnd);
+
+            /*------------------- POST_DATA---------------------*/
+            final int size = Data.length();
+
+            Iterator<String> iter = Data.keys();
+            while (iter.hasNext()) {
+                String key = iter.next();
+                try {
+                    String value = Data.getString(key);
+                    String[] posts = value.split("&");
+                    int max = posts.length;
+                    for(int i=0; i<max;i++) {
+                        dos.writeBytes(twoHyphens + boundary + lineEnd);
+                        String[] kv = posts[i].split("=");
+                        dos.writeBytes("Content-Disposition: form-data; name=\""+key+"" + lineEnd);
+                        dos.writeBytes("Content-Type: text/plain"+lineEnd);
+                        dos.writeBytes(lineEnd);
+                        dos.writeBytes(kv[0]);
+                        dos.writeBytes(lineEnd);
+                    }
+                } catch (JSONException e) {
+                    // Something went wrong!
+                }
+            }
+
+            /*-----------------------------------------------------------*/
+
+            dos.writeBytes(twoHyphens + boundary + twoHyphens + lineEnd);                   // close
 
             serverResponseCode = conn.getResponseCode(); System.out.println("message"+conn.getResponseMessage());
 
@@ -301,7 +328,8 @@ public class BackendFunction  extends AsyncTask<Bitmap,Void,String>{
             e.printStackTrace();
         }
 
-       // if (serverResponseCode == 200) {
+        /*______________RESPONSE___________________________*/
+        if (serverResponseCode == 200) {
         System.out.println("[RESPONSE_CODE] : "+serverResponseCode);
             StringBuilder sb = new StringBuilder();
             try {
@@ -315,9 +343,9 @@ public class BackendFunction  extends AsyncTask<Bitmap,Void,String>{
             } catch (IOException ioex) {
             }
             return sb.toString();
-       // }else {
-      //      return "Could not upload";
-       // }
+        }else {
+            return "SERVER_ERROR";
+        }
     }
 
     private String getAppDir() { // get the path of storage directory
@@ -329,9 +357,4 @@ public class BackendFunction  extends AsyncTask<Bitmap,Void,String>{
 /*---------------------------------------- AsyncTask -------------------------------*/
 /* AsyncTask is used to do heavy processing (HTTP request who took more time,DB operation ,  image processing ) in another thread (doInBackground) because if main thread do such thing its hold or stop the App UI execution ....
 So better approach is do such things in another thread ,, many other thing also for doing Async is one of them
- */
-
-
-/*
-
  */

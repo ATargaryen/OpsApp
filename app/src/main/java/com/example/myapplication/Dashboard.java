@@ -27,7 +27,7 @@ public class Dashboard extends AppCompatActivity
         viewPager=(ViewPager)findViewById(R.id.vpager);
 
         pageAdapter=new PageAdapter(getSupportFragmentManager(),tabLayout.getTabCount());                  // intialize page adapter
-        viewPager.setAdapter(pageAdapter);                                   // viewpager set on basis of pageadapter result
+          viewPager.setAdapter(pageAdapter);                                   // viewpager set on basis of pageadapter result
 
         tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override

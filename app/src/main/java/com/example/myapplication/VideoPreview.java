@@ -54,8 +54,7 @@ public class VideoPreview extends AppCompatActivity  {
 
     public void UploadVideo(View view) throws FFmpegCommandAlreadyRunningException {
 
-            JSONObject data = new JSONObject();
-
+            JSONObject data = new JSONObject();  // create Data object  which send to server
             try {
                 data.put("challanid", Challan_no);
                 data.put("action", Action);

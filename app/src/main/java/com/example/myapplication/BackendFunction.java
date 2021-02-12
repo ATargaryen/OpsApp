@@ -1,26 +1,20 @@
 package com.example.myapplication;
 
 import android.content.Context;
-import android.database.Cursor;
+import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Environment;
-import android.provider.MediaStore;
 import android.util.Base64;
 import android.util.Log;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
-import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.VolleyLog;
-import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
@@ -28,23 +22,18 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-
-import android.database.Cursor;
 
 import nl.bravobit.ffmpeg.ExecuteBinaryResponseHandler;
 import nl.bravobit.ffmpeg.FFmpeg;
@@ -126,6 +115,8 @@ public class BackendFunction  extends AsyncTask<Bitmap,Void,String>{
                         public void onResponse(String response) {
                             Log.e("HttpClient", "success! response: " + response.toString());
                          //   Toast.makeText(context,""+response.toString()+" UPLOADED",Toast.LENGTH_LONG).show();
+                            Intent intent = new Intent(context, Dashboard.class); // Back to dashboard
+                            context.startActivity(intent);
                         }
                     },
                     new Response.ErrorListener() {
@@ -140,7 +131,7 @@ public class BackendFunction  extends AsyncTask<Bitmap,Void,String>{
                 @Override
                 protected Map<String,String> getParams(){
                     Map<String,String> params = new HashMap<String, String>();
-                    params.put("media",MEDIA);
+                    params.put("photo",MEDIA);
                     params.put("challanid",Challan_no);
                     params.put("action",Action);
                     params.put("Role",Role);
@@ -226,6 +217,8 @@ public class BackendFunction  extends AsyncTask<Bitmap,Void,String>{
                     String response =   upload_to_server(video_path,Data);
                     System.out.println("[RESPONSE]  :"+response);
 
+                    Intent intent = new Intent(context, Dashboard.class); // Back to dashboard
+                    context.startActivity(intent);
 
                 } catch (Exception e) {
                     e.printStackTrace();

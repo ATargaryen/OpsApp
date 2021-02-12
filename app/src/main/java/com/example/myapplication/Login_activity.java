@@ -63,7 +63,7 @@ public class Login_activity extends AppCompatActivity {
 
         String username = UsernameEt.getText().toString();
         String password = PasswordEt.getText().toString();
-        username = "amanponia@youngman.co.in"; password = "1234";
+      //  username = "amanponia@youngman.co.in"; password = "1234";
         String type = "NO INTERNET";
 
         RequestQueue queue = Volley.newRequestQueue(this);
@@ -158,7 +158,7 @@ public class Login_activity extends AppCompatActivity {
                             if (type.equals("Pickup")) {
                                 Intent intent = new Intent(Login_activity.this, Dashboard.class);
                                 startActivity(intent);
-                                ;
+
                             }
                         } catch (JSONException e) {
                             //  e.printStackTrace();
@@ -220,7 +220,7 @@ public class Login_activity extends AppCompatActivity {
                             if (type.equals("Pickup")) {
                                 Intent intent = new Intent(Login_activity.this, Dashboard.class);
                                 startActivity(intent);
-                                ;
+
                             }
                         } catch (JSONException e) {
                             //  e.printStackTrace();
@@ -254,13 +254,5 @@ public class Login_activity extends AppCompatActivity {
 
     public String returnUserRole() {
         return role;
-    }
-
-    public void videopreview(View view) {
-
-        // String url ="http://13.127.42.17/testAndroid";
-
-
-
     }
 }

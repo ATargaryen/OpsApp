@@ -9,6 +9,7 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.provider.Settings;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -16,7 +17,17 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.example.myapplication.ScaffChallanstatus;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class SupChallanstatus extends AppCompatActivity {
 
@@ -60,7 +71,7 @@ public class SupChallanstatus extends AppCompatActivity {
         Sup_status_vidbtn2 = (Button) findViewById(R.id.Sup_status_vidbtn2);
         Sup_status_photobtn3 = (Button) findViewById(R.id.Sup_status_photobtn3);
 
-
+        get_steps_toVerify(Challan_no,"Supervisor");
         Sup_status_photobtn1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -96,6 +107,54 @@ public class SupChallanstatus extends AppCompatActivity {
         });
     }
 
+    private void get_steps_toVerify(String challan_no, String role) {
+        RequestQueue queue = Volley.newRequestQueue(this);
+        String url = Constant.ROOT_URL+"Stepsverifi?challanid="+challan_no+"&role="+role;
+        // Request a string response from the provided URL.
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            JSONArray jsonArray = new JSONArray(response);
+                            JSONObject jsonObject = jsonArray.getJSONObject(0);
+                            disable_buttons(jsonObject);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+        });
+
+        // Add the request to the RequestQueue.
+        queue.add(stringRequest);
+    }
+
+    private void disable_buttons(JSONObject jsonObject) throws JSONException {
+        if(TYPE.equals("Pickup")){
+
+            if(!jsonObject.getString("vehicle_loaded_unloaded").equals("null"))
+                Sup_status_photobtn1.setEnabled(false);
+            if(!jsonObject.getString("material_verification").equals("null"))
+                Sup_status_vidbtn2.setEnabled(false);
+            if(!jsonObject.getString("material_segregation").equals("null"))
+                Sup_status_photobtn3.setEnabled(false);
+
+        }else
+        {
+            if(!jsonObject.getString("material_allocated").equals("null"))
+                Sup_status_photobtn1.setEnabled(false);
+            if(!jsonObject.getString("material_verification").equals("null"))
+                Sup_status_vidbtn2.setEnabled(false);
+            if(!jsonObject.getString("vehicle_loaded_unloaded").equals("null"))
+                Sup_status_photobtn3.setEnabled(false);
+        }
+
+    }
 
 
     @Override   // used to show it on Imageframe

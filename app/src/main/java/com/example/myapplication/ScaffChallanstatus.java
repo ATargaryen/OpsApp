@@ -25,6 +25,12 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -37,6 +43,10 @@ import java.util.List;
 import java.util.Locale;
 import com.example.myapplication.Geolocation;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class ScaffChallanstatus extends AppCompatActivity {
 
     Context context;
@@ -48,7 +58,7 @@ public class ScaffChallanstatus extends AppCompatActivity {
     AlertDialog.Builder builder;  // used to show location to user
 
     TextView text_challan_no ,Scaff_status_txt1 ,Scaff_status_txt2,Scaff_status_txt3;
-    Button  Scaff_status_photobtn2 ,Scaff_status_photobtn3 ;
+    Button Sup_status_locbtn1,  Scaff_status_photobtn2 ,Scaff_status_photobtn3 ;
     private  String TYPE, Challan_no;
 
     @Override
@@ -78,9 +88,13 @@ public class ScaffChallanstatus extends AppCompatActivity {
             Scaff_status_txt3.setText("Moved to Warehouse");
         }
 
+        Sup_status_locbtn1 = (Button) findViewById(R.id.Sup_status_locbtn1);
         Scaff_status_photobtn2 = (Button) findViewById(R.id.Scaff_status_photobtn2);
         Scaff_status_photobtn3 = (Button) findViewById(R.id.Scaff_status_photobtn3);
 
+
+
+        get_steps_toVerify(Challan_no,"Scaffolder");
 
         Scaff_status_photobtn2.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -232,6 +246,55 @@ public class ScaffChallanstatus extends AppCompatActivity {
                 }
         }
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    private void get_steps_toVerify(String challan_no, String role) {
+        RequestQueue queue = Volley.newRequestQueue(this);
+        String url = Constant.ROOT_URL+"Stepsverifi?challanid="+challan_no+"&role="+role;
+        // Request a string response from the provided URL.
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            JSONArray jsonArray = new JSONArray(response);
+                            JSONObject jsonObject = jsonArray.getJSONObject(0);
+                            disable_buttons(jsonObject);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+        });
+
+        // Add the request to the RequestQueue.
+        queue.add(stringRequest);
+    }
+
+    private void disable_buttons(JSONObject jsonObject) throws JSONException {
+        if(TYPE.equals("Pickup")){
+
+            if(!jsonObject.getString("lat").equals("null"))
+                Sup_status_locbtn1.setEnabled(false);
+            if(!jsonObject.getString("challan_file").equals("null"))
+                Scaff_status_photobtn2.setEnabled(false);
+            if(!jsonObject.getString("vehicle_moved").equals("null"))
+                Scaff_status_photobtn3.setEnabled(false);
+
+        }else
+        {
+            if(!jsonObject.getString("lat").equals("null"))
+                Sup_status_locbtn1.setEnabled(false);
+            if(!jsonObject.getString("challan_file").equals("null"))
+                Scaff_status_photobtn2.setEnabled(false);
+            if(!jsonObject.getString("material_installed").equals("null"))
+                Scaff_status_photobtn3.setEnabled(false);
+        }
+
     }
 }
 

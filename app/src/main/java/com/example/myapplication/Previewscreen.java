@@ -12,6 +12,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -21,7 +22,9 @@ public class Previewscreen extends AppCompatActivity {
     Bitmap bitmap ;
     int Source ;
     Context mContext;
-    private  String Challan_no , Action ;
+    private  String Challan_no , Action , challantype ;
+    View  progressOverlay;
+    Button photoUploadButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,14 +32,15 @@ public class Previewscreen extends AppCompatActivity {
         setContentView(R.layout.activity_previewscreen);
 
         imageview = (ImageView)findViewById(R.id.preview_imagescreen);
+        photoUploadButton = (Button)findViewById(R.id.photoUploadButton);
+
 
         Intent intent = getIntent();
 
         Source = intent.getIntExtra("data",0);
         Challan_no = intent.getStringExtra("Challan_no");
         Action = intent.getStringExtra("Action");
-
-
+        challantype = intent.getStringExtra("challantype");
 
        if(Source == 1){  // IMAGE FROM CAMERA
            bitmap =  intent.getParcelableExtra("image");     /* Getting ImageBitmap from Camera from Challanstatus Activity */
@@ -66,8 +70,7 @@ public class Previewscreen extends AppCompatActivity {
 
         Bitmap imagebitmap = ((BitmapDrawable)imageview.getDrawable()).getBitmap();
         BackendFunction backendFunction = new BackendFunction(this);
-        backendFunction.uploadMedia(imagebitmap,Challan_no,Action,Constant.ROLE);
-
+        backendFunction.uploadMedia(imagebitmap,Challan_no,challantype,Action,Constant.ROLE);
       //  Toast.makeText(getApplicationContext(),"uploaded",Toast.LENGTH_LONG).show();
     }
 }

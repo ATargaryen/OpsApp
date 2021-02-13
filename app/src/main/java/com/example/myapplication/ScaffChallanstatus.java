@@ -192,9 +192,12 @@ public class ScaffChallanstatus extends AppCompatActivity {
                 .setCancelable(false)
                 .setPositiveButton("OKAY", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        Intent intent = new Intent(ScaffChallanstatus.this, Dashboard.class);
-                        startActivity(intent);
-                        Toast.makeText(getApplicationContext(),"BACK", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(ScaffChallanstatus.this, ScaffChallanstatus.class);
+                        intent.putExtra("Challan_no",Challan_no);
+                        intent.putExtra("CallType",TYPE);
+                        context.startActivity(intent);
+
+                       // Toast.makeText(getApplicationContext(),"BACK", Toast.LENGTH_SHORT).show();
                     }
                 });
         //Creating dialog box
@@ -220,6 +223,7 @@ public class ScaffChallanstatus extends AppCompatActivity {
                     intent.putExtra("image",imageBitmap); // send to another activity
                     intent.putExtra("data", 1);
                     intent.putExtra("Challan_no", Challan_no);
+                    intent.putExtra("challantype", TYPE);
                     intent.putExtra("Action","challan_file");
 
                     startActivity(intent);
@@ -236,6 +240,7 @@ public class ScaffChallanstatus extends AppCompatActivity {
                     intent.putExtra("image",imageBitmap); // send to another activity
                     intent.putExtra("data", 1);
                     intent.putExtra("Challan_no", Challan_no);
+                    intent.putExtra("challantype", TYPE);
                     if(TYPE.equals("Pickup")){
                         intent.putExtra("Action","vehicle_moved");
                     }else {

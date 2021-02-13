@@ -1,9 +1,11 @@
 package com.example.myapplication;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
 
 import android.os.Bundle;
+import android.view.View;
 import android.widget.TableLayout;
 
 import com.google.android.material.tabs.TabItem;
@@ -20,6 +22,11 @@ public class Dashboard extends AppCompatActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
+
+        //custome action bar
+        this.getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+        getSupportActionBar().setDisplayShowCustomEnabled(true);
+        getSupportActionBar().setCustomView(R.layout.action_bar);
 
         tabLayout=(TabLayout)findViewById(R.id.tablayout1);
         tabItem1=(TabItem)findViewById(R.id.tab1);
@@ -51,6 +58,20 @@ public class Dashboard extends AppCompatActivity
 
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));           // listen horizontal scroll to change page
 
+    }
+
+    @Override
+    public void onBackPressed() {
+        boolean Alow = false;
+        if (Alow) {
+            super.onBackPressed();
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    public void ToDashboard(View view){
+             //RELOAD DASHBOARD
     }
 }
 

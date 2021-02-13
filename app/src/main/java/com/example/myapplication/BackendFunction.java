@@ -44,6 +44,8 @@ public class BackendFunction  extends AsyncTask<Bitmap,Void,String>{
     private String Challan_no = "default" ;
     private String Action = "default";
     private String Role = "default" ;
+    private String challantype = "default" ;
+
     private String MEDIA = null ;
 
     static int serverResponseCode;
@@ -79,8 +81,8 @@ public class BackendFunction  extends AsyncTask<Bitmap,Void,String>{
     }
 
 
-    public  void uploadMedia(Bitmap media, String challanid ,String action , String role) {
-          Challan_no = challanid ; Action = action ; Role = role ;
+    public  void uploadMedia(Bitmap media, String challanid ,String type ,String action , String role) {
+          Challan_no = challanid ; Action = action ; Role = role ; challantype = type;
           execute(media);   // call to start the background thread execution
     }
 
@@ -115,8 +117,19 @@ public class BackendFunction  extends AsyncTask<Bitmap,Void,String>{
                         public void onResponse(String response) {
                             Log.e("HttpClient", "success! response: " + response.toString());
                          //   Toast.makeText(context,""+response.toString()+" UPLOADED",Toast.LENGTH_LONG).show();
-                            Intent intent = new Intent(context, Dashboard.class); // Back to dashboard
-                            context.startActivity(intent);
+                            if (Role.equals("Supervisor")) {
+                                Intent intent = new Intent(context, SupChallanstatus.class); // Back to dashboard
+                                intent.putExtra("Challan_no",Challan_no);
+                                intent.putExtra("CallType",challantype);
+                                context.startActivity(intent);
+                            }
+                            if (Role.equals("Scaffolder")) {
+                                Intent intent = new Intent(context, ScaffChallanstatus.class); // Back to dashboard
+                                intent.putExtra("Challan_no",Challan_no);
+                                intent.putExtra("CallType",challantype);
+                                context.startActivity(intent);
+                            }
+
                         }
                     },
                     new Response.ErrorListener() {
@@ -134,7 +147,7 @@ public class BackendFunction  extends AsyncTask<Bitmap,Void,String>{
                     params.put("photo",MEDIA);
                     params.put("challanid",Challan_no);
                     params.put("action",Action);
-                    params.put("Role",Role);
+                    params.put("userRole",Role);
                     return params;
                 }
                 @Override
@@ -217,7 +230,9 @@ public class BackendFunction  extends AsyncTask<Bitmap,Void,String>{
                     String response =   upload_to_server(video_path,Data);
                     System.out.println("[RESPONSE]  :"+response);
 
-                    Intent intent = new Intent(context, Dashboard.class); // Back to dashboard
+                    Intent intent = new Intent(context, SupChallanstatus.class); // Back
+                    intent.putExtra("Challan_no",Data.getString("challanid"));
+                    intent.putExtra("CallType",Data.getString("challantype"));
                     context.startActivity(intent);
 
                 } catch (Exception e) {

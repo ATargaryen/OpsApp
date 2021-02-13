@@ -1,5 +1,6 @@
 package com.example.myapplication;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -17,6 +18,8 @@ import java.util.Arrays;
 public class PageAdapter extends FragmentPagerAdapter
 {
     int tabcount;
+    Context context;
+
 
     public PageAdapter(@NonNull FragmentManager fm, int behavior) {
         super(fm, behavior);

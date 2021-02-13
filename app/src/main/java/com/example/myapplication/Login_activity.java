@@ -1,11 +1,14 @@
  package com.example.myapplication;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 
 import android.widget.Spinner;
@@ -41,7 +44,8 @@ public class Login_activity extends AppCompatActivity {
     public static String[] Dispatchlist;
     public static String[] Pickuplist;
     public static String role;
-    Spinner spinner;
+    View  progressOverlay;
+    Button loginbtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +54,11 @@ public class Login_activity extends AppCompatActivity {
 
         UsernameEt = (EditText) findViewById(R.id.User_email);
         PasswordEt = (EditText) findViewById(R.id.UserPassword);
+        loginbtn = (Button)findViewById(R.id.loginbtn);
+        progressOverlay = findViewById(R.id.progress_overlay);
 
+        loginbtn.setEnabled(true);
+        progressOverlay.setVisibility(View.GONE);
     }
 
     public void OnLogin(View view) {
@@ -58,6 +66,9 @@ public class Login_activity extends AppCompatActivity {
     }
 
     public void go_to_dashboard(View view) {
+        progressOverlay.setVisibility(View.VISIBLE);  // loadingicon
+        loginbtn.setEnabled(false);
+
         Dispatchlist = null;
         Pickuplist = null;
 
@@ -66,7 +77,7 @@ public class Login_activity extends AppCompatActivity {
       //  username = "amanponia@youngman.co.in"; password = "1234";
         String type = "NO INTERNET";
 
-        RequestQueue queue = Volley.newRequestQueue(this);
+        RequestQueue queue = Volley.newRequestQueue(getBaseContext());
         String url = Constant.ROOT_URL + "loginauth?user=" + username + "&password=" + password;
 
 // Request a string response from the provided URL.
@@ -83,12 +94,13 @@ public class Login_activity extends AppCompatActivity {
                                 role = jsonobject.getString("Role");
 
                                 Constant.ROLE = role;                         // define role here used to anywhere
+                                Constant.USER_ID = userid;
 
                                 if (role.equals("Supervisor")) {
-                                    getSupDispatchChallans(userid, "Delivery");
+                                    getSupDispatchChallans(userid, "Delivery", getBaseContext());
                                 }
                                 if (role.equals("Scaffolder")) {
-                                    getScaffDispatchChallans(userid, "Delivery");
+                                    getScaffDispatchChallans(userid, "Delivery", getBaseContext());
                                 }
                                 //   Toast.makeText(getApplicationContext(),name,Toast.LENGTH_LONG).show();
 
@@ -100,7 +112,8 @@ public class Login_activity extends AppCompatActivity {
                         } catch (JSONException e) {
                             //  e.printStackTrace();
                             Toast.makeText(getApplicationContext(), "NOT AUTHENTICATED", Toast.LENGTH_LONG).show();
-
+                            loginbtn.setEnabled(true);
+                            progressOverlay.setVisibility(View.GONE);
                         }
 
 
@@ -110,6 +123,8 @@ public class Login_activity extends AppCompatActivity {
             public void onErrorResponse(VolleyError error) {
 
                 Toast.makeText(getApplicationContext(), type, Toast.LENGTH_LONG).show();
+                loginbtn.setEnabled(true);
+                progressOverlay.setVisibility(View.GONE);
 
             }
         });
@@ -119,9 +134,9 @@ public class Login_activity extends AppCompatActivity {
 
     }
 
-    private void getScaffDispatchChallans(String userid, String type) {
+    public void getScaffDispatchChallans(String userid, String type , Context context) {
 
-        RequestQueue queue = Volley.newRequestQueue(this);
+        RequestQueue queue = Volley.newRequestQueue(context);
         String url = Constant.ROOT_URL + "scaffolder_challan?userid=" + userid + "&type=" + type;
 
 // Request a string response from the provided URL.
@@ -152,7 +167,7 @@ public class Login_activity extends AppCompatActivity {
                             }
 
                             if (type.equals("Delivery")) {
-                                getScaffDispatchChallans(userid, "Pickup");
+                                getScaffDispatchChallans(userid, "Pickup" ,context);
                             }
 
                             if (type.equals("Pickup")) {
@@ -163,7 +178,8 @@ public class Login_activity extends AppCompatActivity {
                         } catch (JSONException e) {
                             //  e.printStackTrace();
                             Toast.makeText(getApplicationContext(), "NOT AUTHENTICATED", Toast.LENGTH_LONG).show();
-
+                            loginbtn.setEnabled(true);
+                            progressOverlay.setVisibility(View.GONE);
                         }
 
 
@@ -171,8 +187,9 @@ public class Login_activity extends AppCompatActivity {
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-
                 System.out.println("error in getting challan");
+                loginbtn.setEnabled(true);
+                progressOverlay.setVisibility(View.GONE);
             }
         });
 
@@ -182,8 +199,8 @@ public class Login_activity extends AppCompatActivity {
     }
 
 
-    private void getSupDispatchChallans(String userid, String type) {
-        RequestQueue queue = Volley.newRequestQueue(this);
+    public void getSupDispatchChallans(String userid, String type , Context context) {
+        RequestQueue queue = Volley.newRequestQueue(context);
         String url = Constant.ROOT_URL + "supervisor_challan?userid=" + userid + "&type=" + type;
 
 // Request a string response from the provided URL.
@@ -214,7 +231,7 @@ public class Login_activity extends AppCompatActivity {
                             }
 
                             if (type.equals("Delivery")) {
-                                getSupDispatchChallans(userid, "Pickup");
+                                getSupDispatchChallans(userid, "Pickup" ,context);
                             }
 
                             if (type.equals("Pickup")) {
@@ -225,7 +242,8 @@ public class Login_activity extends AppCompatActivity {
                         } catch (JSONException e) {
                             //  e.printStackTrace();
                             Toast.makeText(getApplicationContext(), "NOT AUTHENTICATED", Toast.LENGTH_LONG).show();
-
+                            loginbtn.setEnabled(true);
+                            progressOverlay.setVisibility(View.GONE);
                         }
 
 
@@ -254,5 +272,16 @@ public class Login_activity extends AppCompatActivity {
 
     public String returnUserRole() {
         return role;
+    }
+
+
+    @Override
+    public void onBackPressed() {
+        boolean Alow = false;
+        if (Alow) {
+            super.onBackPressed();
+        } else {
+            super.onBackPressed();
+        }
     }
 }

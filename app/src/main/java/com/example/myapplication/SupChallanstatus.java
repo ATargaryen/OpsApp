@@ -172,6 +172,7 @@ public class SupChallanstatus extends AppCompatActivity {
                     intent.putExtra("video_string_uri", uri.toString());   // uri to string conversion
                     intent.putExtra("data", 2);
                     intent.putExtra("Challan_no", Challan_no);
+                    intent.putExtra("challantype", TYPE);
                     intent.putExtra("video_path", path);
                     intent.putExtra("Action","material_verification");
                     startActivity(intent);
@@ -187,6 +188,7 @@ public class SupChallanstatus extends AppCompatActivity {
                     intent.putExtra("image",imageBitmap); // send to another activity
                     intent.putExtra("data", 1);
                     intent.putExtra("Challan_no", Challan_no);
+                    intent.putExtra("challantype", TYPE);
                     if(TYPE.equals("Pickup")){
                         intent.putExtra("Action","vehicle_loaded_unloaded");
                     }else {
@@ -208,6 +210,7 @@ public class SupChallanstatus extends AppCompatActivity {
                     intent.putExtra("image",imageBitmap); // send to another activity
                     intent.putExtra("data", 1);
                     intent.putExtra("Challan_no", Challan_no);
+                    intent.putExtra("challantype", TYPE);
                     if(TYPE.equals("Pickup")) {
                         intent.putExtra("Action", "material_segregation");
                     }else{

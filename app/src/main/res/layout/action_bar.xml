@@ -1,0 +1,34 @@
+<?xml version = "1.0" encoding = "utf-8"?>
+<LinearLayout xmlns:android = "http://schemas.android.com/apk/res/android"
+    xmlns:app = "http://schemas.android.com/apk/res-auto"
+    android:layout_width = "match_parent"
+    android:layout_height = "wrap_content"
+    android:gravity = "center_vertical"
+    android:padding = "10dp"
+    android:weightSum = "1">
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="0.6">
+
+        <ImageView
+            android:id="@+id/homeiconn"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:src="@drawable/homeicon2"
+            android:onClick="ToDashboard"/>
+
+        <TextView
+            android:id="@+id/name"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="10dp"
+            android:text="@string/Young_title"
+            android:textColor="#000"
+            android:textSize="25sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+
+</LinearLayout>

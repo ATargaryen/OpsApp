@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 
@@ -59,6 +60,7 @@ public class Login_activity extends AppCompatActivity {
 
         loginbtn.setEnabled(true);
         progressOverlay.setVisibility(View.GONE);
+
     }
 
     public void OnLogin(View view) {
@@ -90,11 +92,19 @@ public class Login_activity extends AppCompatActivity {
                             for (int i = 0; i < obj.length(); i++) {
                                 JSONObject jsonobject = obj.getJSONObject(i);
                                 String userid = jsonobject.getString("id");
-                                String name = jsonobject.getString("name");
                                 role = jsonobject.getString("Role");
 
-                                Constant.ROLE = role;                         // define role here used to anywhere
+                                // define role here used to anywhere
+                                Constant.ROLE = role;
                                 Constant.USER_ID = userid;
+
+                                //Set user profile
+                                Constant.USER_NAME = jsonobject.getString("name");
+                                Constant.USER_EMAIL = jsonobject.getString("email");
+                                Constant.USER_PHONE = jsonobject.getString("phone_number");
+
+                                System.out.println("aaaaaaa"+Constant.USER_NAME+""+Constant.USER_EMAIL+""+Constant.USER_PHONE);
+
 
                                 if (role.equals("Supervisor")) {
                                     getSupDispatchChallans(userid, "Delivery", getBaseContext());
@@ -279,7 +289,8 @@ public class Login_activity extends AppCompatActivity {
     public void onBackPressed() {
         boolean Alow = false;
         if (Alow) {
-            super.onBackPressed();
+            finishAffinity();  // clear the back stack of activity queue and then finish current activity CLOSE THE APP
+            finish();
         } else {
             super.onBackPressed();
         }

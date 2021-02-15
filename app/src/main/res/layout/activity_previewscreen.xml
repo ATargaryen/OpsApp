@@ -28,7 +28,7 @@
         android:layout_width="279dp"
         android:layout_height="315dp"
         android:layout_marginTop="37dp"
-        android:src="@drawable/younglogo"
+        android:src="@drawable/youngman"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.436"
         app:layout_constraintStart_toStartOf="parent"

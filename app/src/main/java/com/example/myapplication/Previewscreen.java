@@ -25,14 +25,17 @@ public class Previewscreen extends AppCompatActivity {
     private  String Challan_no , Action , challantype ;
     View  progressOverlay;
     Button photoUploadButton;
-
+    Integer back_token = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_previewscreen);
 
+        back_token = 0;
+
         imageview = (ImageView)findViewById(R.id.preview_imagescreen);
         photoUploadButton = (Button)findViewById(R.id.photoUploadButton);
+
 
 
         Intent intent = getIntent();
@@ -68,9 +71,23 @@ public class Previewscreen extends AppCompatActivity {
     }
     public void uploadfile(View view ){
 
+        LoadingDialog.start(Previewscreen.this,"Image Uploading");
+        photoUploadButton.setEnabled(false);
+        back_token = 1;
         Bitmap imagebitmap = ((BitmapDrawable)imageview.getDrawable()).getBitmap();
         BackendFunction backendFunction = new BackendFunction(this);
         backendFunction.uploadMedia(imagebitmap,Challan_no,challantype,Action,Constant.ROLE);
       //  Toast.makeText(getApplicationContext(),"uploaded",Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void onBackPressed() {
+
+        if (back_token==0) {
+            super.onBackPressed();
+        }
+        if (back_token==1) {
+            // do nothing
+        }
     }
 }

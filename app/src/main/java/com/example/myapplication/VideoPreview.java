@@ -1,18 +1,22 @@
 package com.example.myapplication;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.MediaController;
+import android.widget.Switch;
 import android.widget.VideoView;
 
 import org.json.JSONException;
@@ -29,6 +33,7 @@ public class VideoPreview extends AppCompatActivity  {
   private   int Source ;
     Context mContext;
     private  String Challan_no ,challantype, Action ;
+    Integer back_token = 0;
 
 
     Button UploadButton;
@@ -39,6 +44,7 @@ public class VideoPreview extends AppCompatActivity  {
 
         videoView = (VideoView)findViewById(R.id.videoView);
         UploadButton = (Button)findViewById(R.id.UploadButton);
+        back_token = 0;
 
         UploadButton.setEnabled(true);
         Intent intent = getIntent();
@@ -63,8 +69,11 @@ public class VideoPreview extends AppCompatActivity  {
     }
 
     public void UploadVideo(View view) throws FFmpegCommandAlreadyRunningException {
-           getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE); // disable touch on screen
-        //  getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);  enable touch
+
+            LoadingDialog.start(VideoPreview.this,"Video Uploading");
+            UploadButton.setEnabled(false);
+            back_token = 1;
+
 
             JSONObject data = new JSONObject();  // create Data object  which send to server
             try {
@@ -83,6 +92,18 @@ public class VideoPreview extends AppCompatActivity  {
             }
 
         }
+
+    @Override
+    public void onBackPressed() {
+
+        if (back_token==0) {
+            super.onBackPressed();
+        }
+        if (back_token==1) {
+              // do nothing
+        }
+    }
+
 }
 
 /*          thumbnail of a video

@@ -115,8 +115,9 @@ public class BackendFunction  extends AsyncTask<Bitmap,Void,String>{
                     new Response.Listener<String>() {
                         @Override
                         public void onResponse(String response) {
-                            Log.e("HttpClient", "success! response: " + response.toString());
-                         //   Toast.makeText(context,""+response.toString()+" UPLOADED",Toast.LENGTH_LONG).show();
+                            LoadingDialog.close();
+                         //   Log.e("HttpClient", "success! response: " + response.toString());
+                            Toast.makeText(context,""+response.toString()+"IMAGE UPLOADED",Toast.LENGTH_LONG).show();
                             if (Role.equals("Supervisor")) {
                                 Intent intent = new Intent(context, SupChallanstatus.class); // Back to dashboard
                                 intent.putExtra("Challan_no",Challan_no);

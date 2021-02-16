@@ -21,6 +21,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -63,6 +64,8 @@ public class ScaffChallanstatus extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE); // disable touch of screen untill steps_toVerify
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scaffolder_challanstatus);
         ScaffChallanstatus_instance = this ;
@@ -95,6 +98,9 @@ public class ScaffChallanstatus extends AppCompatActivity {
 
 
         get_steps_toVerify(Challan_no,"Scaffolder");
+
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE); // Now enable touch of screen . steps_toVerified
+
 
         Scaff_status_photobtn2.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -300,6 +306,12 @@ public class ScaffChallanstatus extends AppCompatActivity {
                 Scaff_status_photobtn3.setEnabled(false);
         }
 
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(ScaffChallanstatus.this, Dashboard.class);
+        startActivity(intent);
     }
 }
 

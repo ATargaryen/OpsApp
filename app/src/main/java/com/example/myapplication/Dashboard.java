@@ -124,7 +124,7 @@ public class Dashboard extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-        boolean Alow = false;
+        boolean Alow = true;
         if (Alow) {
             finishAffinity();  // clear the back stack of activity queue and then finish current activity CLOSE THE APP
             finish();

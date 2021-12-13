@@ -3,31 +3,21 @@
     xmlns:app = "http://schemas.android.com/apk/res-auto"
     android:layout_width = "match_parent"
     android:layout_height = "wrap_content"
+    android:orientation="vertical"
     android:gravity = "center_vertical"
     android:padding = "10dp"
     android:weightSum = "1">
 
-    <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="0.6">
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/custom_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/Young_Yellow"
+        app:titleTextColor="@color/Young_Black"
+        app:title="Youngman"
+        />
 
-        <ImageView
-            android:id="@+id/homeiconn"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
-            android:onClick="ToDashboard"/>
 
-        <TextView
-            android:id="@+id/name"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="10dp"
-            android:text="@string/Young_title"
-            android:textColor="#000"
-            android:textSize="25sp"
-            android:textStyle="bold" />
-    </LinearLayout>
 
 
 </LinearLayout>

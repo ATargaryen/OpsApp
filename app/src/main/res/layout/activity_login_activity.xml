@@ -7,25 +7,27 @@
     tools:context=".Login_activity">
 
     <include layout="@layout/progressicon"/>
+
     <TextView
         android:id="@+id/textView"
         android:layout_width="200dp"
         android:layout_height="60dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="40dp"
         android:text="@string/login"
         android:textAlignment="center"
         android:textColor="@color/Young_Black"
         android:textSize="40sp"
+        android:fontFamily="monospace"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.478"
+        app:layout_constraintHorizontal_bias="0.445"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
         android:id="@+id/User_email"
-        android:layout_width="wrap_content"
+        android:layout_width="250dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="20dp"
         android:ems="10"
         android:hint="@string/email"
         android:inputType="textEmailAddress"
@@ -35,7 +37,7 @@
 
     <EditText
         android:id="@+id/UserPassword"
-        android:layout_width="wrap_content"
+        android:layout_width="250dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:ems="10"
@@ -60,12 +62,12 @@
     <ImageView
         android:id="@+id/imageView3"
         android:layout_width="125dp"
-        android:layout_height="110dp"
+        android:layout_height="200dp"
         android:layout_marginTop="35dp"
+        android:contentDescription="Brand image"
+        android:src="@drawable/ladder2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView"
-        android:contentDescription="Brand image"
-        android:src="@drawable/youngman" />
+        app:layout_constraintTop_toBottomOf="@+id/textView" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

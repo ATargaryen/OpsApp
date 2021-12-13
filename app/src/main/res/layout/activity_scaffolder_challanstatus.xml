@@ -17,7 +17,7 @@
         app:layout_constraintBottom_toTopOf="@+id/linearLayout2">
         <TextView
             android:id="@+id/textView12"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_weight="1"
             android:layout_height="wrap_content"
             android:text="Job Order"
@@ -40,7 +40,7 @@
 
         <TextView
             android:id="@+id/challanno"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_weight="1"
             android:layout_height="wrap_content"
             android:text="12345786896"
